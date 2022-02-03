@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   final Function addTx;
+
+  NewTransaction(this.addTx);
+
+  @override
+  _NewTransactionState createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
+
   final amountController = TextEditingController();
 
-  void submitData(String val) {
+  void submitData() {
     final enteredTitle = titleController.text;
     final enteredAmount = double.parse(amountController.text);
 
@@ -14,13 +22,14 @@ class NewTransaction extends StatelessWidget {
       return;
     }
 
-    addTx(
-      titleController.text,
-      double.parse(amountController.text),
+    widget.addTx(
+      enteredTitle,
+      enteredAmount,
     );
+
+    Navigator.of(context).pop();
   }
 
-  NewTransaction(this.addTx);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -33,22 +42,22 @@ class NewTransaction extends StatelessWidget {
             TextField(
               decoration: InputDecoration(labelText: 'Title'),
               controller: titleController,
-              onSubmitted: (_) => submitData,
+              onSubmitted: (_) => submitData(),
               // onChanged: (val) {
               //   titleInput = val;
               // },
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
-              // onChanged: (val) => amountInput = val,
               controller: amountController,
               keyboardType: TextInputType.number,
-              onSubmitted: (_) => submitData('Dummy'),
+              onSubmitted: (_) => submitData(),
+              // onChanged: (val) => amountInput = val,
             ),
             FlatButton(
               child: Text('Add Transaction'),
               textColor: Colors.purple,
-              onPressed: () => submitData,
+              onPressed: submitData,
             ),
           ],
         ),
